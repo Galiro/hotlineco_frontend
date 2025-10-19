@@ -104,8 +104,8 @@ export const useMembershipStore = create<MembershipState>((set, get) => ({
 
   hasActiveSubscription: () => {
     const { currentSubscription } = get();
-    return currentSubscription && 
-           ['active', 'trial'].includes(currentSubscription.status) &&
+    if (!currentSubscription) return false;
+    return ['active', 'trial'].includes(currentSubscription.status) &&
            new Date(currentSubscription.current_period_end) > new Date();
   }
 }));

@@ -1,5 +1,12 @@
-import { useAuth } from '../../lib/useAuth';
-import type { Org } from '../../lib/useOrg';
+import { useAuth } from '../../lib/hooks/useAuth';
+
+interface Org {
+  id: string;
+  name: string;
+  plan: string;
+  created_at: string;
+  owner_id: string;
+}
 
 interface OrganizationInfoProps {
   currentOrg: Org;

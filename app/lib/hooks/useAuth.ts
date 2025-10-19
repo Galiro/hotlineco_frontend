@@ -68,7 +68,7 @@ export const useAuth = () => {
           .from('memberships')
           .select(`
             org_id,
-            orgs!inner(
+            orgs(
               id,
               name,
               plan,
@@ -79,17 +79,19 @@ export const useAuth = () => {
           .eq('user_id', user.id)
           .single();
 
-        if (membershipError || !membership) {
+        if (membershipError || !membership || !membership.orgs) {
           console.error('Error loading user organization:', membershipError);
           useUserStore.getState().setCurrentOrg(null);
           return;
         }
 
-        console.log('Organization loaded:', membership.orgs.name);
-        useUserStore.getState().setCurrentOrg(membership.orgs);
+        // orgs is a single object, not an array
+        const org = membership.orgs as any;
+        console.log('Organization loaded:', org.name);
+        useUserStore.getState().setCurrentOrg(org);
         
         // Load subscription for this organization
-        await useUserStore.getState().loadSubscription(membership.orgs.id);
+        await useUserStore.getState().loadSubscription(org.id);
       } catch (err) {
         console.error('Error loading user organization:', err);
         useUserStore.getState().setCurrentOrg(null);
